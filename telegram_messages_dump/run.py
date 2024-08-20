@@ -19,9 +19,12 @@ Where:
     -e,  --exp       Exporter name. text | jsonl | csv (Default: 'text')
       ,  --continue  Continue previous dump. Supports optional integer param <message_id>.
     -l,  --limit     Number of the latest messages to dump, 0 means no limit. (Default: 100)
+    -d,  --download Download media files (video, photos, voice, ...)
+    -r,  --rename   Rename the log and the output folder to something. Useful for deleted chats. (Default: )
     -cl, --clean     Clean session sensitive data (e.g. auth token) on exit. (Default: False)
     -v,  --verbose   Verbose mode. (Default: False)
       ,  --addbom    Add BOM to the beginning of the output file. (Default: False)
+    -L,  --list      List available chats
     -h,  --help      Show this help message and exit.
 """
 

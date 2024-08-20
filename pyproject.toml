@@ -1,0 +1,29 @@
+[project]
+name = "telegram-messages-dump"
+authors = [
+  { name='Kostya Kravets', email="kostikkv@gmail.com" },
+]
+description = "Telegram Messages Dump console utility."
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+        'Environment :: Console',
+        'Intended Audience :: Developers',
+        'Intended Audience :: System Administrators',
+        "License :: OSI Approved :: MIT License",
+        "Programming Language :: Python",
+        'Programming Language :: Python :: 3'
+]
+
+dynamic = ["version"]
+dependencies = [ "telethon" ]
+
+[tool.setuptools.dynamic]
+version = {attr = "telegram_messages_dump.__version__"}
+
+[project.urls]
+Homepage = "https://github.com/Kosat/telegram-messages-dump"
+Issues = "https://github.com/Kosat/telegram-messages-dump/issues"
+
+[project.scripts]
+telegram-messages-dump = 'telegram_messages_dump.run:main'

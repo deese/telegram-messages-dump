@@ -32,6 +32,9 @@ class ChatDumpSettings:
         parser.add_argument('-v', '--verbose', action='store_true')
         parser.add_argument('--addbom', action='store_true')
         parser.add_argument('-q', '--quiet', action='store_true')
+        parser.add_argument('-L', '--list', action='store_true', dest='list_action')
+        parser.add_argument('-d', '--download', action='store_true', dest='download_action')
+        parser.add_argument('-r', '--rename', type=str, default='')
 
         args = parser.parse_args()
 
@@ -78,7 +81,10 @@ class ChatDumpSettings:
         elif args.chat.startswith(JOIN_CHAT_PREFIX_URL):
             out_file = OUTPUT_FILE_TEMPLATE.format(args.chat.rsplit('/', 1)[-1])
         else:
-            out_file = OUTPUT_FILE_TEMPLATE.format(args.chat)
+            if args.rename:
+              out_file = OUTPUT_FILE_TEMPLATE.format(args.rename)
+            else:
+              out_file = OUTPUT_FILE_TEMPLATE.format(args.chat)
 
         self.chat_name = args.chat
         self.phone_num = args.phone
@@ -89,6 +95,9 @@ class ChatDumpSettings:
         self.is_verbose = args.verbose
         self.is_addbom = args.addbom
         self.is_quiet_mode = args.quiet
+        self.list_action = args.list_action
+        self.download_action = args.download_action
+        self.rename = args.rename
 
     def _process_incremental_mode_option(self, args, parser):
         """ Arguments parsing related to --continue setting """
@@ -137,7 +146,7 @@ class ChatDumpSettings:
                                  'when using --continue')
         else:
             # In case of Normal mode
-            if args.chat == "":
+            if args.chat == "" and args.list_action == False:
                 parser.error('the following arguments are required: -c/--chat ')
         return
 

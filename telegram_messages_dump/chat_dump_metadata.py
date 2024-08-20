@@ -16,6 +16,7 @@ class DumpMetadata:
     CHAT_NAME = "chat_name"
     LAST_MESSAGE_ID = "latest_message_id"
     EXPORTER = "exporter_name"
+    CHAT_RENAME = "rename"
 
     def __init__(self, out_file_path):
         self.meta_file_path = out_file_path + '.meta'
@@ -30,6 +31,7 @@ class DumpMetadata:
         settings.chat_name = self._meta_dict[DumpMetadata.CHAT_NAME]
         settings.last_message_id = self._meta_dict[DumpMetadata.LAST_MESSAGE_ID]
         settings.exporter = self._meta_dict[DumpMetadata.EXPORTER]
+        settings.rename = self._meta_dict.get(DumpMetadata.CHAT_RENAME, "")
 
     def _loadFromFile(self):
         """ Loads metadata from file """
@@ -72,6 +74,8 @@ class DumpMetadata:
                      new_dict[DumpMetadata.LAST_MESSAGE_ID]
             if DumpMetadata.EXPORTER in new_dict:
                 self._meta_dict[DumpMetadata.EXPORTER] = new_dict[DumpMetadata.EXPORTER]
+            if DumpMetadata.CHAT_RENAME in new_dict:
+                self._meta_dict[DumpMetadata.CHAT_RENAME] = new_dict[DumpMetadata.CHAT_RENAME]
 
             self.logger.info('Writing a new metadata file.')
             with open(self.meta_file_path, 'w') as mf:

@@ -74,6 +74,11 @@ class TelegramDumper(TelegramClient):
         ret_code = 0
         try:
             self._init_connect()
+
+            if self.settings.list_action:
+              self._listDialogs()
+              return
+
             try:
                 chatObj = self._getChannel()
             except ValueError as ex:
@@ -134,6 +139,19 @@ class TelegramDumper(TelegramClient):
                     pw = getpass("Two step verification is enabled. "
                                  "Please enter your password: ")
                     self_user = self.sign_in(password=pw)
+
+    def _listDialogs(self):
+        """ List all available dialogs. """
+
+        dialogs_count = self.get_dialogs(0).total
+        dialogs = self.get_dialogs(limit=None)
+        for dialog in dialogs:
+            ret = f"Dialog title: {dialog.name} / {dialog.entity.id}"
+
+            if hasattr(dialog.entity, 'username'):
+                ret += f" - {dialog.entity.username}"
+
+            sprint(ret)
 
     def _getChannel(self):
         """ Returns telethon.tl.types.Channel object resolved from chat_name
@@ -197,6 +215,10 @@ class TelegramDumper(TelegramClient):
                 sprint('Dialog username "{}" resolved into channel id={}'.format(
                     name, dialog.entity.id))
                 return dialog.entity
+            if dialog.entity.id == name:
+              sprint('Dialog id found id={}'.format(dialog.entity.id))
+              return dialog.entity
+
         self.logger.debug('Specified chat name was not found among dialogs.')
 
         raise ValueError('Failed to resolve dialogue/chat name "{}".'.format(name))
@@ -252,6 +274,16 @@ class TelegramDumper(TelegramClient):
             self.msg_count_to_process -= 1
             self.id_offset = msg.id
             self.exporter_context.is_last_record = False
+
+
+            if msg.media and self.settings.download_action:
+              if self.settings.rename:
+                chat_name = self.settings.rename
+              else:
+                chat_name = msg._chat.username if msg._chat.username else str(msg._chat.id)
+
+              msg.download_media(file="{}_files/".format(chat_name))
+
             if self.msg_count_to_process == 0:
                 break
 
@@ -327,7 +359,8 @@ class TelegramDumper(TelegramClient):
         meta_dict = {
             "latest_message_id": self.cur_latest_message_id,
             "exporter_name": self.settings.exporter,
-            "chat_name": self.settings.chat_name
+            "chat_name": self.settings.chat_name,
+            "chat_rename": self.settings.rename
         }
         self.metadata.save_meta_file(meta_dict)
 

@@ -215,7 +215,7 @@ class TelegramDumper(TelegramClient):
                 sprint('Dialog username "{}" resolved into channel id={}'.format(
                     name, dialog.entity.id))
                 return dialog.entity
-            if dialog.entity.id == name:
+            if name.isdigit() and dialog.entity.id == int(name):
               sprint('Dialog id found id={}'.format(dialog.entity.id))
               return dialog.entity
 

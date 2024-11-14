@@ -202,6 +202,7 @@ class TelegramDumper(TelegramClient):
         self.logger.info('%s user`s dialogs found', dialogs_count)
         dialogs = self.get_dialogs(limit=None)
         self.logger.debug('%s dialogs fetched.', len(dialogs))
+
         for dialog in dialogs:
             if dialog.name == name:
                 sprint('Dialog title "{}" resolved into channel id={}'.format(
@@ -215,7 +216,7 @@ class TelegramDumper(TelegramClient):
                 sprint('Dialog username "{}" resolved into channel id={}'.format(
                     name, dialog.entity.id))
                 return dialog.entity
-            if dialog.entity.id == name:
+            if name.isdigit() and dialog.entity.id == int(name):
               sprint('Dialog id found id={}'.format(dialog.entity.id))
               return dialog.entity
 

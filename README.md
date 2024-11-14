@@ -94,6 +94,10 @@ To use a custom exporter. Place you `.py` file with a class implementing those 3
 
 >Note2: in `.vscode` subfolder you can find the default settings that I use for debugging this project.  
 
+## TODO
+
+- When using an ID as the chat name, resolve the username or chat name if possible. Hint: "out_file = OUTPUT_FILE_TEMPLATE.format(args.chat)"
+
 ## License
 
 This project is licensed under the [MIT license](LICENSE).
